@@ -1,170 +1,90 @@
+import java.nio.ByteBuffer;
 
 /**
- * the record class contains the necessary information
+ * Holds a single record
  * 
- * @author light
- * @version 2020 fall
+ * @author CS Staff
+ * @version 2020-10-15
  */
-public class Record {
-    private String name;
-    private MyList<String> fieldName;
-    private MyList<String> fieldValue;
-    private int start;
-    private int end;
+public class Record implements Comparable<Record> {
+
+    private byte[] completeRecord;
 
     /**
-     * constructor
-     * initialize the field array
+     * The constructor for the Record class
      * 
+     * @param record
+     *            The byte for this object
      */
-    public Record() {
-        // default array for field
-        fieldName = new MyList<String>(String.class, 10);
-        fieldValue = new MyList<String>(String.class, 10);
-
+    public Record(byte[] record) {
+        completeRecord = record;
     }
 
 
     /**
-     * get the record name
+     * returns the complete record
      * 
-     * @return record name
+     * @return complete record
      */
-    public String getName() {
-        return name;
+    public byte[] getCompleteRecord() {
+        return completeRecord;
     }
 
 
     /**
-     * set the record name
+     * Returns the object's key
      * 
-     * @param name
-     *            name of the record
+     * @return the key
      */
-    public void setName(String name) {
-        this.name = name;
+    public double getKey() {
+        ByteBuffer buff = ByteBuffer.wrap(completeRecord);
+        return buff.getDouble(8);
     }
 
 
     /**
-     * get the field name list
+     * Returns the object's ID
      * 
-     * @return field name list
+     * @return the ID
      */
-    public MyList<String> getFieldName() {
-        return fieldName;
+    public long getID() {
+        ByteBuffer buff = ByteBuffer.wrap(completeRecord);
+        return buff.getLong(0);
     }
 
 
     /**
-     * add the field name in the record
+     * Compare Two Records based on their keys
      * 
-     * @param fieldN
-     *            the record fieldName
+     * @param toBeCompared
+     *            - The Record to be compared.
+     * @return A negative integer, zero, or a positive integer as this employee
+     *         is less than, equal to, or greater than the supplied record
+     *         object.
      */
-    public void addFieldName(String fieldN) {
-        this.fieldName.add(fieldN);
+    @Override
+    public int compareTo(Record toBeCompared) {
+        return Double.compare(this.getKey(), toBeCompared.getKey());
     }
 
 
     /**
-     * get the field value list
+     * Outputs the record as a String
      * 
-     * @return field value
+     * @return a string of what the record contains
      */
-    public MyList<String> getFieldValue() {
-        return fieldValue;
+    public String toString() {
+        return "" + this.getKey();
     }
 
 
     /**
-     * add the field value array in the record
+     * get the full record (ID + key)
      * 
-     * @param fieldV
-     *            the record fieldValue
+     * @return full record string
      */
-    public void addFieldValue(String fieldV) {
-        this.fieldValue.add(fieldV);
-    }
-
-
-    /**
-     * remove the field name and value
-     * in the record
-     * 
-     * @param index
-     *            the location of target field
-     */
-    public void removeField(int index) {
-        fieldName.remove(index);
-        fieldValue.remove(index);
-    }
-
-
-    /**
-     * get the start position
-     * in the memory pool
-     * 
-     * @return start position
-     */
-    public int getStart() {
-        return start;
-    }
-
-
-    /**
-     * set the start position
-     * in the memory pool
-     * 
-     * @param start
-     *            start position of record
-     */
-    public void setStart(int start) {
-        this.start = start;
-    }
-
-
-    /**
-     * get the end position
-     * in the memory pool
-     * 
-     * @return end position
-     */
-    public int getEnd() {
-        return end;
-    }
-
-
-    /**
-     * set the end position
-     * in the memory pool
-     * 
-     * @param end
-     *            end position of record
-     */
-    public void setEnd(int end) {
-        this.end = end;
-    }
-
-
-    /**
-     * get the record total length
-     * including name and field
-     * 
-     * @return record length
-     */
-    public int getLength() {
-        int result = name.length();
-        for (int i = 0; i < fieldName.getSize(); i++) {
-            if (fieldName.get(i) != null) {
-                result += "<SEP>".length();
-                result += fieldName.get(i).length();
-                result += "<SEP>".length();
-                result += fieldValue.get(i).length();
-            }
-        }
-
-        return result;
+    public String fullRecord() {
+        return "" + this.getID() + " " + this.getKey() + " ";
     }
 
 }

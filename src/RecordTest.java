@@ -1,32 +1,46 @@
+
+import java.nio.ByteBuffer;
 import student.TestCase;
 
 /**
- * unit test for record class
+ * Holds a single record
  * 
- * @author light
- * @version 2020 fall
- * 
+ * @author CS Staff
+ * @version 2020-10-15
  */
 public class RecordTest extends TestCase {
-    /**
-     * record test focus on the
-     * get length method
-     * 
-     */
-    public void testInsert() {
-        Record record = new Record();
-        record.setName("light");
-        assertEquals(record.getLength(), 5);
-        String fieldName1 = "gene";
-        String fieldName2 = "hobby";
-        String fieldValue1 = "beast";
-        String fieldValue2 = "game";
-        record.addFieldName(fieldName1);
-        record.addFieldValue(fieldValue1);
-        assertEquals(record.getLength(), 24);
-        record.addFieldName(fieldName2);
-        record.addFieldValue(fieldValue2);
-        assertEquals(record.getLength(), 43);
 
+    private byte[] aBite;
+
+    /**
+     * The setup for the tests
+     */
+    public void setUp() {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES + Double.BYTES);
+        buffer.putLong(7);
+        buffer.putDouble(8, 1);
+        aBite = buffer.array();
     }
+
+
+    /**
+     * Tests the first constructor
+     */
+    public void testConstruct1() {
+        Record rec = new Record(aBite);
+        assertEquals((double)1, rec.getKey(), 0.00);
+        assertEquals(aBite, rec.getCompleteRecord());
+        assertTrue(rec.toString().equals("1.0"));
+    }
+
+
+    /**
+     * Tests the first constructor
+     */
+    public void testCompareTo() {
+        Record rec = new Record(aBite);
+        Record recToBeCompared = new Record(aBite);
+        assertEquals(rec.compareTo(recToBeCompared), 0);
+    }
+
 }
